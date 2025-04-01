@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import classes from './TodoPage.module.scss'
-import TodoItem from '../components/TodoItem'
+import TodoItem from '../components/TodoItem/TodoItem'
+import TodoForm from '../components/TodoForm/TodoForm'
 
 function TodoPage() {
-    const [todosData, setTodosData] = useState(['Task 1', 'Task 2', 'Task 3', 'Task 4'])
+    const [taskInputValue, setTaskInputValue] = useState('')
+    const [todosData, setTodosData] = useState(JSON.parse(localStorage.getItem('todos')) || [])
 
     const todos = todosData.map((todo, index) => {
         return (
@@ -17,16 +19,15 @@ function TodoPage() {
         )
     })
 
-    function addTodo() {
-        setTodosData([...todosData, 'New task']) // ['Task 1', 'Task 2', 'Task 3', 'Task 4', 'New task']
-    }
-
     return (
         <div className={classes.container}>
-            <div className={classes.inputContainer}>
-                <input type="text" placeholder='New task title'/>
-                <button onClick={addTodo}>Add</button>
-            </div>
+            <h1 className={classes.title}>Todo app</h1>
+            <TodoForm
+                todosData={todosData}
+                setTodosData={setTodosData}
+                taskInputValue={taskInputValue}
+                setTaskInputValue={setTaskInputValue}
+            />
             <div className={classes.todosContainer}>
                 {todos}
             </div>

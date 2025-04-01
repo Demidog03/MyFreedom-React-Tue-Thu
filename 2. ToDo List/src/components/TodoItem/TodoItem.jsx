@@ -3,7 +3,9 @@ import classes from './TodoItem.module.scss'
 function TodoItem({ taskTitle, todosData, setTodosData, taskIndex }) {
 
     function deleteTask() {
-        setTodosData(todosData.filter((_, index) => index !== taskIndex))
+        const newTodos = todosData.filter((_, index) => index !== taskIndex)
+        localStorage.setItem('todos', JSON.stringify(newTodos))
+        setTodosData(newTodos)
     }
 
     return (
