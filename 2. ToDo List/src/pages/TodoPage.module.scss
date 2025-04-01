@@ -1,0 +1,49 @@
+.container {
+    max-width: 900px;
+    min-height: 400px;
+    background-color: rgb(224, 224, 224);
+    margin-inline: auto;
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 4px;
+}
+
+.inputContainer {
+    display: flex;
+    gap: 10px;
+
+    input {
+        border: 1px solid teal;
+        padding: 5px;
+        width: 100%;
+        border-radius: 4px;
+        color: teal;
+
+        &:focus {
+            outline: 1.5px solid teal;
+        }
+    }
+
+    button {
+        padding: 5px 8px;
+        border: 0;
+        background-color: teal;
+        color: white;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s ease-out;
+
+        &:hover {
+            background-color: white;
+            color: teal;
+            outline: 1px solid teal;
+        }
+    }
+}
+
+.todosContainer {
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+    gap: 10px;
+}
