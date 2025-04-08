@@ -7,11 +7,14 @@ import axios from 'axios';
 import Pagination from 'react-bootstrap/Pagination';
 import Spinner from 'react-bootstrap/Spinner';
 import classes from './MarketplaceCards.module.css'
+import { useSearchParams } from "react-router";
 
 function MarketplaceCards() {
     const [products, setProducts] = useState([])
-    const [currentPage, setCurrentPage] = useState(1)
+    const [searchParams, setSearchParams] = useSearchParams()
+    const [currentPage, setCurrentPage] = useState(+searchParams.get('page') || 1)
     const [isLoading, setIsLoading] = useState(false)
+    
     const paginationItems = []
 
     useEffect(() => {
@@ -38,6 +41,7 @@ function MarketplaceCards() {
 
     function changePage(i) {
         setCurrentPage(i)
+        setSearchParams({ page: i })
     }
 
     for (let i = 1; i <= 10; i++) {
@@ -57,7 +61,7 @@ function MarketplaceCards() {
                     </div>
                 )
                 : (
-                    <Row xs={1} sm={2} md={3} lg={4} className="g-4">
+                    <Row xs={1} sm={2} md={3} lg={4} className="g-3">
                         {products.map((product, idx) => (
                             <Col key={idx}>
                                 <MarketplaceCard
@@ -65,13 +69,14 @@ function MarketplaceCards() {
                                     description={product.description}
                                     image={product.image}
                                     price={product.price}
+                                    id={product.id}
                                 />
                             </Col>
                         ))}
                     </Row>
                 )
             }
-            <Pagination>
+            <Pagination className={classes.cardPagination}>
                 {paginationItems}
             </Pagination>
         </Container >

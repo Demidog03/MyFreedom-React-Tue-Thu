@@ -1,7 +1,9 @@
 .card {
+    overflow: hidden;
+
     .img {
         height: 259px;
-        object-fit: cover;
+        object-fit: contain;
         object-position: center;
     }
 

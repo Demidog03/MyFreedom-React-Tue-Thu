@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import Card from 'react-bootstrap/Card';
+import { Card, Button, Placeholder } from 'react-bootstrap';
 import classes from './MarketplaceCard.module.css';
-import Button from 'react-bootstrap/Button';
 import placholderImage from '../../assets/images/placeholder-image.png'
+import { useNavigate, useSearchParams } from 'react-router';
 
-function MarketplaceCard({ title, price, description, image }) {
-    const [cardImg, setCardImg] = useState(image)
+function MarketplaceCard({ title, price, description, image, id }) {
+    // Falsy values
+    // false, null, undefined, '', 0
+    const [cardImg, setCardImg] = useState('')
+    const navigate = useNavigate()
+    const [searchParams] = useSearchParams()
 
     useEffect(() => {
         testImage(image)
@@ -22,11 +26,22 @@ function MarketplaceCard({ title, price, description, image }) {
         }
     }
 
-    console.log(cardImg)
+    function goToProductPage() {
+        const currentPage = searchParams.get('page') // page=10 -> 10
+        navigate(`/product/${id}?backPage=${currentPage}`) // product?backPage=10
+    }
 
     return (
         <Card className={classes.card}>
-            <Card.Img className={classes.img} variant="top" src={cardImg} />
+            {!cardImg
+                ? (
+                    <Placeholder animation="glow">
+                        <Placeholder className={classes.img} xs={12} /> {/* 12 - 100% */}
+                    </Placeholder>
+                )
+                : 
+                    <Card.Img className={classes.img} variant="top" src={cardImg} />
+            }
             <Card.Body>
                 <Card.Title className={classes.title}>{title}</Card.Title>
                 <Card.Text className={classes.price}>
@@ -35,7 +50,7 @@ function MarketplaceCard({ title, price, description, image }) {
                 <Card.Text className={classes.description}>
                     {description}
                 </Card.Text>
-                <Button style={{ width: '100%' }} variant="success">Order now</Button>
+                <Button onClick={goToProductPage} style={{ width: '100%' }} variant="success">Order now</Button>
             </Card.Body>
         </Card>
     )
