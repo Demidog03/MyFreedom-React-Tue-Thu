@@ -1,4 +1,4 @@
-import MarketplaceNavbar from "../components/MarketplaceNavbar"
+import MarketplaceNavbar from "../components/MarketplaceNavbar/MarketplaceNavbar"
 import ProductDetails from "../components/ProductDetails/ProductDetails"
 
 function ProductPage() {

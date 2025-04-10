@@ -4,8 +4,15 @@ import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import { useNavigate } from 'react-router';
 
 function MarketplaceNavbar() {
+    const navigate = useNavigate()
+
+    function goSigninPage() {
+        navigate('/signin')
+    }
+
     return (
         <Navbar expand="md" className="bg-body-tertiary">
             <Container fluid="lg">
@@ -31,7 +38,7 @@ function MarketplaceNavbar() {
                         </NavDropdown>
                     </Nav>
                     <Form className="d-flex">
-                        <Button variant="outline-success">Sign-in</Button>
+                        <Button onClick={goSigninPage} variant="outline-success">Sign-in</Button>
                     </Form>
                 </Navbar.Collapse>
             </Container>

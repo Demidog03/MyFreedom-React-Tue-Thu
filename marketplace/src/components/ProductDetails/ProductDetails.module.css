@@ -3,6 +3,10 @@
     object-fit: contain;
 }
 
+.title {
+    font-size: 1.7rem;
+}
+
 .container {
     display: flex;
     justify-content: space-between;
@@ -40,4 +44,19 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+@media screen and (max-width: 780px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .productInformation {
+        width: 100%;
+    }
+
+    .image {
+        width: 79%;
+        margin-inline: auto;
+    }
 }

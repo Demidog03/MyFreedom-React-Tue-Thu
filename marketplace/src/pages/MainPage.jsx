@@ -1,5 +1,5 @@
 import MarketplaceCards from "../components/MarketplaceCards/MarketplaceCards"
-import MarketplaceNavbar from "../components/MarketplaceNavbar"
+import MarketplaceNavbar from "../components/MarketplaceNavbar/MarketplaceNavbar"
 import TestComponent from "../components/TestComponent"
 
 function MainPage() {

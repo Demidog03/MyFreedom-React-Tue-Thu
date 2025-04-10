@@ -49,8 +49,8 @@ function ProductDetails() {
     }
 
     return (
-        <Container fluid="lg">
-            <Button onClick={goBack} variant='secondary' size="sm">Back</Button>
+        <Container fluid="lg" className='pt-4 pb-4'>
+            <Button className='mb-4' onClick={goBack} variant='secondary' size="sm">Back</Button>
             {loading ? (
                 // TODO: Выгрузить в отдельный компонент
                 <div className={classes.spinnerContainer}>
@@ -65,7 +65,7 @@ function ProductDetails() {
                             <Image className={classes.image} src={product.image} rounded />
                             <div className={classes.productInformation}>
                                 <Badge bg="info">{product.category}</Badge>
-                                <h1>{product.title}</h1>
+                                <h1 className={classes.title}>{product.title}</h1>
                                 <p>{product.description}</p>
                                 {product?.brand && <p><PatchCheckFill /> <b>Brand:</b> <span className={classes.brand}>{product.brand}</span></p>}
                                 {product?.model && <p><BoxFillIcon /> <b>Model:</b> {product.model}</p>}
