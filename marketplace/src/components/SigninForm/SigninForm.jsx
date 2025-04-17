@@ -5,33 +5,54 @@ import { useState } from 'react';
 import FullscreenSpinner from '../../shared/FullscreenSpinner/FullscreenSpinner';
 import { useNavigate } from 'react-router';
 import MarketplaceToaster from '../../shared/MarketplaceToaster/MarketplaceToaster';
+import PasswordFormControl from '../../shared/PasswordFormControl/PasswordFormControl';
 
 function SigninForm() {
     const navigate = useNavigate()
     const [error, setError] = useState('')
     const [signinData, setSigninData] = useState({
-        username: '',
+        email: '',
         password: ''
     })
     const [loading, setLoading] = useState(false)
+    const [validationErrors, setValidationErrors] = useState({
+        email: '',
+        password: ''
+    })
 
     async function signin(event) {
         setError('')
         event.preventDefault()
+        let hasErrors = false
         try {
             setLoading(true)
-            const response = await axios.post('https://fakestoreapi.com/auth/login', {
-                username: signinData.username,
-                password: signinData.password
+            const { password, email } = signinData
+
+            if(!email) {
+                setValidationErrors(validationErrors => ({...validationErrors, email: 'Email is required!'}))
+                hasErrors = true
+            }
+            if(!password) {
+                setValidationErrors(validationErrors => ({...validationErrors, password: 'Password is required!'}))
+                hasErrors = true
+            }
+
+            if(hasErrors) {
+                return
+            }
+
+            const response = await axios.post('http://localhost:5000/auth/login', {
+                email, password
             })
-            if(response?.data?.token) {
+
+            if(response?.status === 200 && response?.data) {
                 navigate('/')
             }
         }
         catch(err) {
             console.log(err)
-            if(err?.response?.data) {
-                setError(err.response.data)
+            if(typeof err?.response?.data?.message === 'string') {
+                setError(err.response.data.message)
             }
             else {
                 setError('Sign-in error!')
@@ -42,14 +63,16 @@ function SigninForm() {
         }
     }
 
-    function changeUsername(event) {
+    function changeEmail(event) {
+        setValidationErrors({...validationErrors, email: ''})
         setSigninData({
             ...signinData,
-            username: event.target.value
+            email: event.target.value
         })
     }
 
     function changePassword(event) {
+        setValidationErrors({...validationErrors, password: ''})
         setSigninData({
             ...signinData,
             password: event.target.value
@@ -75,13 +98,28 @@ function SigninForm() {
                 <h1 className='mb-4'>Sign-in</h1>
                 <Form className={classes.form}>
                     <Form.Group className="mb-3" controlId="username">
-                        <Form.Label>Username</Form.Label>
-                        <Form.Control onChange={changeUsername} type="text" placeholder="Enter username" />
+                        <Form.Label>Email</Form.Label>
+                        <Form.Control
+                            onChange={changeEmail}
+                            type="text"
+                            placeholder="Enter email"
+                            isInvalid={Boolean(validationErrors.email)} // Boolean('') => false, Boolean('Email is required!') => true
+                        />
+                        <Form.Control.Feedback type="invalid">
+                            {validationErrors.email}
+                        </Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="password">
                         <Form.Label>Password</Form.Label>
-                        <Form.Control onChange={changePassword} type="password" placeholder="Password" />
+                        <PasswordFormControl
+                            onChange={changePassword}
+                            placeholder="Password"
+                            isInvalid={Boolean(validationErrors.password)}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                            {validationErrors.password}
+                        </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicCheckbox">
                         <Button onClick={goToSignupPage} variant="link">Do not have account? Sign-up!</Button>

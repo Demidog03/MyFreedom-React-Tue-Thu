@@ -5,6 +5,8 @@ import FullscreenSpinner from '../../shared/FullscreenSpinner/FullscreenSpinner'
 import { useNavigate } from 'react-router';
 import MarketplaceToaster from '../../shared/MarketplaceToaster/MarketplaceToaster';
 import classes from './SignupForm.module.css'
+import { EmailRegex, PasswordRegex, UsernameRegex } from '../../shared/Regex';
+import PasswordFormControl from '../../shared/PasswordFormControl/PasswordFormControl';
 
 function SignupForm() {
     const navigate = useNavigate()
@@ -15,6 +17,11 @@ function SignupForm() {
     })
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
+    const [validationErrors, setValidationErrors] = useState({
+        username: '',
+        email: '',
+        password: ''
+    })
 
     function goBack() {
         navigate('/')
@@ -25,6 +32,10 @@ function SignupForm() {
     }
 
     function changeUsername(event) {
+        setValidationErrors({
+            ...validationErrors,
+            username: ''
+        })
         setSignupData({
             ...signupData,
             username: event.target.value
@@ -32,6 +43,10 @@ function SignupForm() {
     }
 
     function changeEmail(event) {
+        setValidationErrors({
+            ...validationErrors,
+            email: ''
+        })
         setSignupData({
             ...signupData,
             email: event.target.value
@@ -39,6 +54,10 @@ function SignupForm() {
     }
 
     function changePassword(event) {
+        setValidationErrors({
+            ...validationErrors,
+            password: ''
+        })
         setSignupData({
             ...signupData,
             password: event.target.value
@@ -47,20 +66,51 @@ function SignupForm() {
 
     async function signup(event) {
         event.preventDefault()
+        let hasErrors = false
         try {
             setLoading(true)
-            const response = await axios.post('https://fakestoreapi.com/users', {
-                id: Date.now(),
-                username: signupData.username,
-                password: signupData.password,
-                email: signupData.email
+            const { username, email, password } = signupData
+            
+            if(!UsernameRegex.test(username)) {
+                setValidationErrors(validationErrors => ({
+                    ...validationErrors,
+                    username: 'Username must contain only letters and numbers, and it must be between 6 and 16 characters long'
+                }))
+                hasErrors = true
+            }
+            if(!EmailRegex.test(email)) {
+                setValidationErrors(validationErrors => ({
+                    ...validationErrors,
+                    email: 'Please enter a valid email address (e.g., name@example.com).'
+                }))
+                hasErrors = true
+            }
+            if(!PasswordRegex.test(password)) {
+                setValidationErrors(validationErrors => ({
+                    ...validationErrors,
+                    password: 'Password must be at least 8 characters long and contain at least one letter and one number.'
+                }))
+                hasErrors = true
+            }
+
+            if(hasErrors) {
+                return
+            }
+
+            const response = await axios.post('http://localhost:5000/auth/register', {
+                username,
+                email,
+                password
             })
-            console.log(response)
+
+            if(response?.status === 201 && response?.data) {
+                navigate('/signin')
+            }
         }
         catch(err) {
             console.error(err)
-            if(err?.response?.data) {
-                setError(err.response.data)
+            if(typeof err?.response?.data?.message === 'string') {
+                setError(err.response.data.message)
             }
             else {
                 setError('Sign-up error!')
@@ -83,15 +133,36 @@ function SignupForm() {
                 <Form className={classes.form}>
                     <Form.Group className="mb-3" controlId="username">
                         <Form.Label>Username</Form.Label>
-                        <Form.Control onChange={changeUsername} type="text" placeholder="Enter username" />
+                        <Form.Control
+                            onChange={changeUsername}
+                            type="text"
+                            placeholder="Enter username"
+                            isInvalid={Boolean(validationErrors.username)}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                            {validationErrors.username}
+                        </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="email">
                         <Form.Label>Email</Form.Label>
-                        <Form.Control onChange={changeEmail} type="text" placeholder="Enter Email" />
+                        <Form.Control
+                            onChange={changeEmail}
+                            type="text"
+                            placeholder="Enter Email"
+                            isInvalid={Boolean(validationErrors.email)}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                            {validationErrors.email}
+                        </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="password">
                         <Form.Label>Password</Form.Label>
-                        <Form.Control onChange={changePassword} type="password" placeholder="Password" />
+                        <PasswordFormControl
+                            onChange={changePassword}
+                            placeholder="Password"
+                            isInvalid={Boolean(validationErrors.password)}
+                            error={validationErrors.password}
+                        />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicCheckbox">
                         <Button onClick={goToSigninPage} variant="link">Already have an account? Sign-in!</Button>
