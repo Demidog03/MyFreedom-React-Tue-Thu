@@ -32,12 +32,12 @@ function PasswordFormControl(props) {
             )}
             {isIconsAvailable && !isVisible && (
                 <div className={classes.eyeFillIcon} onMouseDown={showPassword}>
-                    <EyeFillIcon />
+                    <EyeSlashFillIcon />
                 </div>
             )}
             {isIconsAvailable && isVisible && (
-                <div className={classes.eyeFillIcon} onMouseUp={hidePassword}>
-                    <EyeSlashFillIcon />
+                <div className={classes.eyeFillIcon} onMouseUp={hidePassword} onMouseLeave={hidePassword}>
+                    <EyeFillIcon />
                 </div>
             )}
         </div>

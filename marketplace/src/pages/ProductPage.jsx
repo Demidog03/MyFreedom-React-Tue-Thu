@@ -1,5 +1,5 @@
-import MarketplaceNavbar from "../components/MarketplaceNavbar/MarketplaceNavbar"
-import ProductDetails from "../components/ProductDetails/ProductDetails"
+import MarketplaceNavbar from "../components/marketplace-navbar/MarketplaceNavbar"
+import ProductDetails from "../components/product-details/ProductDetails"
 
 function ProductPage() {
     return (

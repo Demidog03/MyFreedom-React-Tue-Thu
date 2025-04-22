@@ -1,10 +1,7 @@
 .spinnerContainer {
-    height: 800px;
+    width: 100%;
+    height: 600px;
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.cardPagination {
-    margin-top: 20px;
 }

@@ -3,20 +3,36 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
 import { useNavigate } from 'react-router';
+import { Cart2Icon } from '../../shared/Icons';
+import classes from './MarketplaceNavbar.module.css'
+import ProductCartOffCanvas from '../product-cart-off-canvas/ProductCartOffCanvas';
+import { useState } from 'react';
 
 function MarketplaceNavbar() {
+    const [showCart, setShowCart] = useState(false)
     const navigate = useNavigate()
 
     function goSigninPage() {
         navigate('/signin')
     }
 
+    function goToMainPage() {
+        navigate('/')
+    }
+
+    function openCart() {
+        setShowCart(true)
+    }
+
+    function closeCart() {
+        setShowCart(false)
+    }
+
     return (
         <Navbar expand="md" className="bg-body-tertiary">
             <Container fluid="lg">
-                <Navbar.Brand href="#">Marketplace</Navbar.Brand>
+                <Navbar.Brand className={classes.logo} onClick={goToMainPage}>Marketplace</Navbar.Brand>
                 <Navbar.Toggle aria-controls="navbarScroll" />
                 <Navbar.Collapse id="navbarScroll">
                     <Nav
@@ -24,24 +40,14 @@ function MarketplaceNavbar() {
                         style={{ maxHeight: '100px' }}
                         navbarScroll
                     >
-                        <Nav.Link href="#action1">Home</Nav.Link>
-                        <Nav.Link href="#action2">Link</Nav.Link>
-                        <NavDropdown title="Link" id="navbarScrollingDropdown">
-                            <NavDropdown.Item href="#action3">Action</NavDropdown.Item>
-                            <NavDropdown.Item href="#action4">
-                                Another action
-                            </NavDropdown.Item>
-                            <NavDropdown.Divider />
-                            <NavDropdown.Item href="#action5">
-                                Something else here
-                            </NavDropdown.Item>
-                        </NavDropdown>
                     </Nav>
-                    <Form className="d-flex">
+                    <Form className={classes.navbarButtons}>
+                        <div onClick={openCart} className={classes.cartIcon}><Cart2Icon/></div>
                         <Button onClick={goSigninPage} variant="outline-success">Sign-in</Button>
                     </Form>
                 </Navbar.Collapse>
             </Container>
+            <ProductCartOffCanvas show={showCart} handleClose={closeCart}/>
         </Navbar>
     )
 }

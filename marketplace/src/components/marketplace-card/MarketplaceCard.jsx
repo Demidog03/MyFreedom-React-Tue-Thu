@@ -3,6 +3,7 @@ import { Card, Button, Placeholder } from 'react-bootstrap';
 import classes from './MarketplaceCard.module.css';
 import placholderImage from '../../assets/images/placeholder-image.png'
 import { useNavigate, useSearchParams } from 'react-router';
+import { CartPlusIcon } from '../../shared/Icons';
 
 function MarketplaceCard({ title, price, description, image, id }) {
     // Falsy values
@@ -31,6 +32,31 @@ function MarketplaceCard({ title, price, description, image, id }) {
         navigate(`/product/${id}?backPage=${currentPage}`) // product?backPage=10
     }
 
+    [
+        {
+            productId: '1',
+            amount: 2
+        },
+        {
+            productId: '80',
+            amount: 4
+        }
+    ]
+
+    function addToCart() {
+        const oldCardProducts = JSON.parse(localStorage.getItem('cartProducts')) || []
+        const foundProduct = oldCardProducts.find(p => p.productId === id)
+
+        if(foundProduct) {
+            foundProduct.amount++
+            localStorage.setItem('cartProducts', JSON.stringify(oldCardProducts))
+        }
+        else {
+            const newProduct = { productId: id, amount: 1 }
+            localStorage.setItem('cartProducts', JSON.stringify([...oldCardProducts, newProduct]))
+        }
+    }
+
     return (
         <Card className={classes.card}>
             {!cardImg
@@ -50,7 +76,12 @@ function MarketplaceCard({ title, price, description, image, id }) {
                 <Card.Text className={classes.description}>
                     {description}
                 </Card.Text>
-                <Button onClick={goToProductPage} style={{ width: '100%' }} variant="success">Order now</Button>
+                <div className={classes.buttons}>
+                    <Button variant="outline-primary" onClick={goToProductPage} style={{ width: '100%' }}>Order now</Button>
+                    <Button onClick={addToCart} variant="outline-success">
+                        <div className={classes.cartIcon}><CartPlusIcon/></div>
+                    </Button>
+                </div>
             </Card.Body>
         </Card>
     )

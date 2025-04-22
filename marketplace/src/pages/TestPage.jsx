@@ -1,21 +1,22 @@
 import { useState } from "react"
 
 function TestPage() {
-    const [counter, setCounter] = useState(0)
+    const [user, setUser] = useState({
+        name: 'Olzhas',
+        email: 'olzhas@gmail.com'
+    })
+    const username = user.name
+    const email = user.email
 
-    function increaseCounter() {
-        // setCounter(counter + 1) // 0 + 1 = 1
-        // setCounter(counter + 1) // 0 + 1 = 1
-        // setCounter(counter + 1) // 0 + 1 = 1
-
-        setCounter((counter) => counter + 1) // 0 + 1 = 1
-        setCounter((counter) => counter + 1) // 1 + 1 = 2
-        setCounter((counter) => counter + 1) // 2 + 1 = 3
+    function changeName() {
+        setUser({ ...user, name: 'Dauren' })
     }
+    
     return (
         <div>
-            <h1>Counter: {counter}</h1>
-            <button onClick={increaseCounter}>Increase</button>
+            <p>Username: {username}</p>
+            <p>Email: {email}</p>
+            <button onClick={changeName}>Change Name</button>
         </div>
     )
 }

@@ -35,4 +35,13 @@
         text-overflow: ellipsis;
         word-break: break-word;
     }
+
+    .buttons {
+        display: flex;
+        gap: 10px;
+    }
+
+    .cartIcon {
+        display: flex;
+    }
 }

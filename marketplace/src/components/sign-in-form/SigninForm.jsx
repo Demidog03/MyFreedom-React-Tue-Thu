@@ -2,10 +2,11 @@ import {Button, Form, Container, Toast, ToastContainer} from 'react-bootstrap';
 import classes from './SigninForm.module.css'
 import axios from 'axios';
 import { useState } from 'react';
-import FullscreenSpinner from '../../shared/FullscreenSpinner/FullscreenSpinner';
+import FullscreenSpinner from '../../shared/fullscreen-spinner/FullscreenSpinner';
 import { useNavigate } from 'react-router';
-import MarketplaceToaster from '../../shared/MarketplaceToaster/MarketplaceToaster';
-import PasswordFormControl from '../../shared/PasswordFormControl/PasswordFormControl';
+import MarketplaceToaster from '../../shared/marketplace-toaster/MarketplaceToaster';
+import PasswordFormControl from '../../shared/password-form-control/PasswordFormControl';
+import GoBackButton from '../../shared/go-back-button/GoBackButton';
 
 function SigninForm() {
     const navigate = useNavigate()
@@ -93,7 +94,7 @@ function SigninForm() {
 
     return (
         <Container fluid="lg">
-            <Button className={classes.goBackBtn} onClick={goBack} variant='secondary' size="sm">Back</Button>
+            <GoBackButton to="/" className={classes.goBackBtn} />
             <div className={classes.formContainer}>
                 <h1 className='mb-4'>Sign-in</h1>
                 <Form className={classes.form}>

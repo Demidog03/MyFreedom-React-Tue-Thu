@@ -1,5 +1,5 @@
 import Container from "react-bootstrap/esm/Container"
-import MarketplaceCard from "../MarketplaceCard/MarketplaceCard"
+import MarketplaceCard from "../marketplace-card/MarketplaceCard"
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import { useEffect, useState } from "react";
@@ -8,23 +8,29 @@ import Pagination from 'react-bootstrap/Pagination';
 import Spinner from 'react-bootstrap/Spinner';
 import classes from './MarketplaceCards.module.css'
 import { useSearchParams } from "react-router";
+import MarketplaceCategoryFilter from "../markeplace-category-filter/MarketplaceCategoryFilter";
 
 function MarketplaceCards() {
     const [products, setProducts] = useState([])
-    const [searchParams, setSearchParams] = useSearchParams()
-    const [currentPage, setCurrentPage] = useState(+searchParams.get('page') || 1)
+    const [searchParams, setSearchParams] = useSearchParams() // состояние
     const [isLoading, setIsLoading] = useState(false)
+    const currentPage = +searchParams.get('page') || 1
+    const currentCategory = searchParams.get('category')
     
     const paginationItems = []
 
     useEffect(() => {
-        getProducts(currentPage)
-    }, [currentPage])
+        getProducts(currentPage, currentCategory)
+    }, [currentPage, currentCategory])
 
-    async function getProducts(page) {
+    async function getProducts(page, category) {
         try {
             setIsLoading(true)
-            const response = await axios.get(`https://fakestoreapi.in/api/products?page=${page}&limit=8`)
+            const link = !category ?
+                `https://fakestoreapi.in/api/products?page=${page}&limit=8`
+                : `https://fakestoreapi.in/api/products/category?type=${category}&page=${page}&limit=8`
+                
+            const response = await axios.get(link)
             const productsData = response.data?.products
             if (response.status === 200 && productsData?.length) {
                 setProducts(productsData)
@@ -40,8 +46,8 @@ function MarketplaceCards() {
     }
 
     function changePage(i) {
-        setCurrentPage(i)
-        setSearchParams({ page: i })
+        searchParams.set('page', i)
+        setSearchParams(searchParams)
     }
 
     for (let i = 1; i <= 10; i++) {
@@ -54,6 +60,9 @@ function MarketplaceCards() {
 
     return (
         <Container fluid="lg">
+            <div className={classes.filterContainer}>
+                <MarketplaceCategoryFilter/>
+            </div>
             {isLoading
                 ? (
                     <div className={classes.spinnerContainer}>

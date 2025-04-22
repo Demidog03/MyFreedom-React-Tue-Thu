@@ -1,0 +1,29 @@
+.title {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+}
+
+.discount {
+    text-decoration: line-through;
+    color: grey;
+}
+
+.priceWithDiscount {
+    position: relative;
+
+    .badge {
+        position: absolute;
+        font-size: 10px;
+        top: -2px;
+        left: 100%;
+    }
+}
+
+.priceContainer {
+    margin-bottom: 0;
+    margin-top: 10px;
+}

@@ -1,12 +1,13 @@
 import {Button, Form, Container, Toast, ToastContainer} from 'react-bootstrap';
 import axios from 'axios';
 import { useState } from 'react';
-import FullscreenSpinner from '../../shared/FullscreenSpinner/FullscreenSpinner';
+import FullscreenSpinner from '../../shared/fullscreen-spinner/FullscreenSpinner';
 import { useNavigate } from 'react-router';
-import MarketplaceToaster from '../../shared/MarketplaceToaster/MarketplaceToaster';
+import MarketplaceToaster from '../../shared/marketplace-toaster/MarketplaceToaster';
 import classes from './SignupForm.module.css'
 import { EmailRegex, PasswordRegex, UsernameRegex } from '../../shared/Regex';
-import PasswordFormControl from '../../shared/PasswordFormControl/PasswordFormControl';
+import PasswordFormControl from '../../shared/password-form-control/PasswordFormControl';
+import GoBackButton from '../../shared/go-back-button/GoBackButton';
 
 function SignupForm() {
     const navigate = useNavigate()
@@ -127,7 +128,7 @@ function SignupForm() {
 
     return (
         <Container fluid="lg">
-            <Button className={classes.goBackBtn} onClick={goBack} variant='secondary' size="sm">Back</Button>
+            <GoBackButton to="/" className={classes.goBackBtn} />
             <div className={classes.formContainer}>
                 <h1 className='mb-4'>Sign-up</h1>
                 <Form className={classes.form}>
