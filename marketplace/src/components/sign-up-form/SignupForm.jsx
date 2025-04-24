@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import FullscreenSpinner from '../../shared/fullscreen-spinner/FullscreenSpinner';
 import { useNavigate } from 'react-router';
-import MarketplaceToaster from '../../shared/marketplace-toaster/MarketplaceToaster';
+import MarketplaceErrorToaster from '../../shared/marketplace-toaster/MarketplaceErrorToaster';
 import classes from './SignupForm.module.css'
 import { EmailRegex, PasswordRegex, UsernameRegex } from '../../shared/Regex';
 import PasswordFormControl from '../../shared/password-form-control/PasswordFormControl';
@@ -128,7 +128,6 @@ function SignupForm() {
 
     return (
         <Container fluid="lg">
-            <GoBackButton to="/" className={classes.goBackBtn} />
             <div className={classes.formContainer}>
                 <h1 className='mb-4'>Sign-up</h1>
                 <Form className={classes.form}>
@@ -173,7 +172,7 @@ function SignupForm() {
                     </Button>
                 </Form>
             </div>
-            <MarketplaceToaster show={Boolean(error)} close={closeToaster} error={error} />
+            <MarketplaceErrorToaster show={Boolean(error)} close={closeToaster} error={error} />
             <FullscreenSpinner active={loading}/>
        </Container>
     )

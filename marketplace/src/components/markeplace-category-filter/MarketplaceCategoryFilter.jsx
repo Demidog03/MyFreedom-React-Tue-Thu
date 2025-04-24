@@ -2,7 +2,7 @@ import { Form } from "react-bootstrap"
 import classes from './MarketplaceCategoryFilter.module.css'
 import { useEffect, useState } from "react"
 import axios from "axios"
-import MarketplaceToaster from "../../shared/marketplace-toaster/MarketplaceToaster"
+import MarketplaceErrorToaster from "../../shared/marketplace-toaster/MarketplaceErrorToaster"
 import { useSearchParams } from "react-router"
 
 function MarketplaceCategoryFilter() {
@@ -53,7 +53,7 @@ function MarketplaceCategoryFilter() {
                     </option>
                 ))}
             </Form.Select>
-            <MarketplaceToaster show={Boolean(error)} close={closeToaster} error={error} />
+            <MarketplaceErrorToaster show={Boolean(error)} close={closeToaster} error={error} />
             {/*
                 Boolean('') = false
                 Boolean('Failed to get product categories!') = true

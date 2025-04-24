@@ -4,14 +4,16 @@ import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { useNavigate } from 'react-router';
-import { Cart2Icon } from '../../shared/Icons';
+import { Cart2Icon, PeopleCircleIcon } from '../../shared/Icons';
 import classes from './MarketplaceNavbar.module.css'
 import ProductCartOffCanvas from '../product-cart-off-canvas/ProductCartOffCanvas';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { UserContext } from '../contexts/UserContext';
 
 function MarketplaceNavbar() {
     const [showCart, setShowCart] = useState(false)
     const navigate = useNavigate()
+    const { currentUser, setCurrentUser } = useContext(UserContext)
 
     function goSigninPage() {
         navigate('/signin')
@@ -29,6 +31,15 @@ function MarketplaceNavbar() {
         setShowCart(false)
     }
 
+    function logout() {
+        setCurrentUser(undefined)
+        localStorage.removeItem('accessToken')
+    }
+
+    function goToProfileEditPage() {
+        navigate('/profile/edit')
+    }
+
     return (
         <Navbar expand="md" className="bg-body-tertiary">
             <Container fluid="lg">
@@ -43,7 +54,9 @@ function MarketplaceNavbar() {
                     </Nav>
                     <Form className={classes.navbarButtons}>
                         <div onClick={openCart} className={classes.cartIcon}><Cart2Icon/></div>
-                        <Button onClick={goSigninPage} variant="outline-success">Sign-in</Button>
+                        {!currentUser && <Button onClick={goSigninPage} variant="outline-success">Sign-in</Button>}
+                        {currentUser && <div onClick={goToProfileEditPage} className={classes.profileIcon}><PeopleCircleIcon/></div>}
+                        {currentUser && <Button size="sm" onClick={logout} variant="outline-secondary">Logout</Button>}
                     </Form>
                 </Navbar.Collapse>
             </Container>

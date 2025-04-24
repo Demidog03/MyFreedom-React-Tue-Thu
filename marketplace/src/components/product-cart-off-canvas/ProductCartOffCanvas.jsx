@@ -13,8 +13,8 @@ function ProductCartOffCanvas({ show, handleClose }) {
 
     useEffect(() => {
         if (show) {
-            const allCartProductIds = JSON.parse(localStorage.getItem('cartProducts'))
-            allCartProductIds.forEach(product => {
+            const allCartProductIds = JSON.parse(localStorage.getItem('cartProducts')) || [] // undefined
+            allCartProductIds.forEach(product => { // undefined.forEach - нет метода
                 console.log(product)
                 fetchProductById(product.productId, product.amount)
             });

@@ -1,16 +1,18 @@
 import {Button, Form, Container, Toast, ToastContainer} from 'react-bootstrap';
 import classes from './SigninForm.module.css'
 import axios from 'axios';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import FullscreenSpinner from '../../shared/fullscreen-spinner/FullscreenSpinner';
 import { useNavigate } from 'react-router';
-import MarketplaceToaster from '../../shared/marketplace-toaster/MarketplaceToaster';
+import MarketplaceErrorToaster from '../../shared/marketplace-toaster/MarketplaceErrorToaster';
 import PasswordFormControl from '../../shared/password-form-control/PasswordFormControl';
 import GoBackButton from '../../shared/go-back-button/GoBackButton';
+import MarketplaceSuccessToaster from '../../shared/marketplace-toaster/MarketplaceSuccessToaster';
 
 function SigninForm() {
     const navigate = useNavigate()
     const [error, setError] = useState('')
+    const [success, setSuccess] = useState('')
     const [signinData, setSigninData] = useState({
         email: '',
         password: ''
@@ -47,7 +49,13 @@ function SigninForm() {
             })
 
             if(response?.status === 200 && response?.data) {
-                navigate('/')
+                if(response.data?.data?.accessToken) {
+                    localStorage.setItem('accessToken', response.data.data.accessToken)
+                }
+                setSuccess(response.data?.message || 'Successful login!')
+                setTimeout(() => {
+                    navigate('/')
+                }, 1000)
             }
         }
         catch(err) {
@@ -80,21 +88,20 @@ function SigninForm() {
         })
     }
 
-    function closeToaster() {
+    function closeErrorToaster() {
         setError('')
+    }
+
+    function closeSuccessToaster() {
+        setSuccess('')
     }
 
     function goToSignupPage() {
         navigate('/signup')
     }
 
-    function goBack() {
-        navigate('/')
-    }
-
     return (
         <Container fluid="lg">
-            <GoBackButton to="/" className={classes.goBackBtn} />
             <div className={classes.formContainer}>
                 <h1 className='mb-4'>Sign-in</h1>
                 <Form className={classes.form}>
@@ -130,7 +137,8 @@ function SigninForm() {
                     </Button>
                 </Form>
             </div>
-            <MarketplaceToaster show={Boolean(error)} close={closeToaster} error={error} />
+            <MarketplaceErrorToaster show={Boolean(error)} close={closeErrorToaster} error={error} />
+            <MarketplaceSuccessToaster show={Boolean(success)} close={closeSuccessToaster} text={success} />
             <FullscreenSpinner active={loading}/>
        </Container>
     )
