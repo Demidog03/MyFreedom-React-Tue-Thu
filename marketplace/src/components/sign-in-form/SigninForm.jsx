@@ -1,6 +1,5 @@
 import {Button, Form, Container, Toast, ToastContainer} from 'react-bootstrap';
 import classes from './SigninForm.module.css'
-import axios from 'axios';
 import { useContext, useState } from 'react';
 import FullscreenSpinner from '../../shared/fullscreen-spinner/FullscreenSpinner';
 import { useNavigate } from 'react-router';
@@ -8,6 +7,8 @@ import MarketplaceErrorToaster from '../../shared/marketplace-toaster/Marketplac
 import PasswordFormControl from '../../shared/password-form-control/PasswordFormControl';
 import GoBackButton from '../../shared/go-back-button/GoBackButton';
 import MarketplaceSuccessToaster from '../../shared/marketplace-toaster/MarketplaceSuccessToaster';
+import { AuthContext } from '../contexts/AuthContext';
+import { loginApi } from '../../api/api';
 
 function SigninForm() {
     const navigate = useNavigate()
@@ -22,6 +23,8 @@ function SigninForm() {
         email: '',
         password: ''
     })
+
+    const { setToken } = useContext(AuthContext)
 
     async function signin(event) {
         setError('')
@@ -44,12 +47,11 @@ function SigninForm() {
                 return
             }
 
-            const response = await axios.post('http://localhost:5000/auth/login', {
-                email, password
-            })
+            const response = await loginApi(email, password)
 
             if(response?.status === 200 && response?.data) {
                 if(response.data?.data?.accessToken) {
+                    setToken(response.data.data.accessToken)
                     localStorage.setItem('accessToken', response.data.data.accessToken)
                 }
                 setSuccess(response.data?.message || 'Successful login!')

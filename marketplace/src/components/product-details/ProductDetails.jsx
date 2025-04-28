@@ -2,8 +2,8 @@ import { Badge, Button, Container, Image, Spinner } from 'react-bootstrap'
 import classes from './ProductDetails.module.css'
 import { useNavigate, useParams, useSearchParams } from 'react-router'
 import { useEffect, useState } from 'react'
-import axios from 'axios'
 import { BoxFillIcon, PalleteFillIcon, PatchCheckFill, TagFillIcon } from '../../shared/Icons'
+import { getProductDetailsApi } from '../../api/api'
 
 function ProductDetails() {
     const [product, setProduct] = useState(null)
@@ -21,7 +21,7 @@ function ProductDetails() {
     async function fetchProductById(id) {
         try {
             setLoading(true)
-            const response = await axios.get(`https://fakestoreapi.in/api/products/${id}`)
+            const response = await getProductDetailsApi(id)
             if (response?.data?.product) {
                 const productInfo = response.data.product
                 if (productInfo?.discount) {

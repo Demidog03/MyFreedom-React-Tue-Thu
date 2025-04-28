@@ -4,16 +4,18 @@ import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { useNavigate } from 'react-router';
-import { Cart2Icon, PeopleCircleIcon } from '../../shared/Icons';
+import { Cart2Icon, MoonStarsFillIcon, PeopleCircleIcon } from '../../shared/Icons';
 import classes from './MarketplaceNavbar.module.css'
 import ProductCartOffCanvas from '../product-cart-off-canvas/ProductCartOffCanvas';
 import { useContext, useState } from 'react';
 import { UserContext } from '../contexts/UserContext';
+import { AuthContext } from '../contexts/AuthContext';
 
 function MarketplaceNavbar() {
     const [showCart, setShowCart] = useState(false)
     const navigate = useNavigate()
     const { currentUser, setCurrentUser } = useContext(UserContext)
+    const { setToken } = useContext(AuthContext)
 
     function goSigninPage() {
         navigate('/signin')
@@ -33,11 +35,17 @@ function MarketplaceNavbar() {
 
     function logout() {
         setCurrentUser(undefined)
+        setToken('')
         localStorage.removeItem('accessToken')
     }
 
     function goToProfileEditPage() {
         navigate('/profile/edit')
+    }
+
+    function toggleTheme() {
+        const currentTheme = document.querySelector('html').getAttribute('data-bs-theme')
+        document.querySelector('html').setAttribute('data-bs-theme', currentTheme === 'dark' ? 'light' : 'dark')
     }
 
     return (
@@ -53,6 +61,7 @@ function MarketplaceNavbar() {
                     >
                     </Nav>
                     <Form className={classes.navbarButtons}>
+                        <div onClick={toggleTheme} className={classes.themeIcon}><MoonStarsFillIcon/></div>
                         <div onClick={openCart} className={classes.cartIcon}><Cart2Icon/></div>
                         {!currentUser && <Button onClick={goSigninPage} variant="outline-success">Sign-in</Button>}
                         {currentUser && <div onClick={goToProfileEditPage} className={classes.profileIcon}><PeopleCircleIcon/></div>}

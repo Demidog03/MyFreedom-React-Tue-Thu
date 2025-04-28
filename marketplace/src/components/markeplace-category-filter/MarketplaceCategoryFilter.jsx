@@ -1,9 +1,9 @@
 import { Form } from "react-bootstrap"
 import classes from './MarketplaceCategoryFilter.module.css'
 import { useEffect, useState } from "react"
-import axios from "axios"
 import MarketplaceErrorToaster from "../../shared/marketplace-toaster/MarketplaceErrorToaster"
 import { useSearchParams } from "react-router"
+import { getCategoriesApi } from "../../api/api"
 
 function MarketplaceCategoryFilter() {
     const [categories, setCategories] = useState([])
@@ -16,7 +16,7 @@ function MarketplaceCategoryFilter() {
 
     async function getProductCaterogies() {
         try {
-            const response = await axios.get('https://fakestoreapi.in/api/products/category')
+            const response = await getCategoriesApi()
             if (response.status === 200 && response?.data?.categories) {
                 setCategories(response.data.categories)
             }

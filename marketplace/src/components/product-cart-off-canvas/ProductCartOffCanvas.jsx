@@ -1,8 +1,8 @@
-import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { ListGroup, Offcanvas, Spinner } from 'react-bootstrap'
 import ProductCartItem from '../product-cart-item/ProductCartItem'
 import classes from './ProductCartOffCanvas.module.css'
+import { getProductDetailsApi } from '../../api/api'
 
 function ProductCartOffCanvas({ show, handleClose }) {
     const [products, setProducts] = useState([])
@@ -29,7 +29,7 @@ function ProductCartOffCanvas({ show, handleClose }) {
     async function fetchProductById(id, amount) {
         try {
             setLoading(true)
-            const response = await axios.get(`https://fakestoreapi.in/api/products/${id}`)
+            const response = await getProductDetailsApi(id)
             if (response?.data?.product) {
                 const productInfo = response.data.product
                 if (productInfo?.discount) {

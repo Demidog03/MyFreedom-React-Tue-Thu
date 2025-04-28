@@ -1,5 +1,4 @@
 import {Button, Form, Container, Toast, ToastContainer} from 'react-bootstrap';
-import axios from 'axios';
 import { useState } from 'react';
 import FullscreenSpinner from '../../shared/fullscreen-spinner/FullscreenSpinner';
 import { useNavigate } from 'react-router';
@@ -8,6 +7,7 @@ import classes from './SignupForm.module.css'
 import { EmailRegex, PasswordRegex, UsernameRegex } from '../../shared/Regex';
 import PasswordFormControl from '../../shared/password-form-control/PasswordFormControl';
 import GoBackButton from '../../shared/go-back-button/GoBackButton';
+import { registerApi } from '../../api/api';
 
 function SignupForm() {
     const navigate = useNavigate()
@@ -98,10 +98,10 @@ function SignupForm() {
                 return
             }
 
-            const response = await axios.post('http://localhost:5000/auth/register', {
-                username,
+            const response = await registerApi({
                 email,
-                password
+                password,
+                username
             })
 
             if(response?.status === 201 && response?.data) {
