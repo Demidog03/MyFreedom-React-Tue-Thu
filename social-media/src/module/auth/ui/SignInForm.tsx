@@ -6,11 +6,8 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import { useNavigate } from "react-router"
 import useLoginMutation from "../query/useLoginMutation"
 import BackdropSpinner from "../../../shared/BackdropSpinner"
+import { useAuthSelector } from "../store/auth.store"
 import { useEffect } from "react"
-<<<<<<< HEAD
-import { useAuthSelector, useAuthStore } from "../store/auth.store"
-=======
->>>>>>> ea099b67bc2ebb6516ffff0b5183816789c02a18
 
 interface SignInFormData {
     username: string
@@ -27,10 +24,7 @@ const signInSchema = yup.object({
 function SignInForm() {
     const navigate = useNavigate()
     const { data, mutate, isPending } = useLoginMutation()
-<<<<<<< HEAD
-    const { token, setToken } = useAuthStore()
-=======
->>>>>>> ea099b67bc2ebb6516ffff0b5183816789c02a18
+    const { setToken} = useAuthSelector()
     const { register, handleSubmit, formState: { errors, isValid } } = useForm<SignInFormData>({
         defaultValues: { username: '', password: '' },
         resolver: yupResolver(signInSchema)
@@ -45,17 +39,9 @@ function SignInForm() {
         navigate('/sign-up')
     }
 
-<<<<<<< HEAD
-    console.log(token)
-
     useEffect(() => {
         if(data?.accessToken) {
             setToken(data.accessToken)
-=======
-    useEffect(() => {
-        if(data?.accessToken) {
-            localStorage.setItem('accessToken', data.accessToken)
->>>>>>> ea099b67bc2ebb6516ffff0b5183816789c02a18
         }
     }, [data])
 
