@@ -1,9 +1,11 @@
 import { Link, Typography } from '@mui/material'
 import SidebarLayout from '../shared/SidebarLayout'
 import { useNavigate } from 'react-router'
+import { useProfileSelector } from '../module/profile/store/profile.store'
 
 function HomePage() {
     const navigate = useNavigate()
+    const { currentUser } = useProfileSelector()
 
     function goToSignInPage() {
         navigate('/sign-in')
@@ -17,7 +19,7 @@ function HomePage() {
         <SidebarLayout>
             <div>
                 <Typography variant='h1' gutterBottom>
-                    HOMEPAGE
+                    Welcome {currentUser?.firstName}
                 </Typography>
                 <Typography>
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem nobis fugit velit eligendi nam odit obcaecati rem ut. Officiis
