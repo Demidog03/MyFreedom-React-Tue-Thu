@@ -4,31 +4,44 @@ import { useForm } from "react-hook-form"
 import * as yup from 'yup'
 import { yupResolver } from "@hookform/resolvers/yup"
 import { useNavigate } from "react-router"
+import useLoginMutation from "../query/useLoginMutation"
+import BackdropSpinner from "../../../shared/BackdropSpinner"
+import { useEffect } from "react"
 
 interface SignInFormData {
-    email: string
+    username: string
     password: string
+    twoFACode: string
 }
 
 const signInSchema = yup.object({
-    email: yup.string().required("Email is required"),
-    password: yup.string().required("Password is required")
+    username: yup.string().required("Email is required"),
+    password: yup.string().required("Password is required"),
+    twoFACode: yup.string().required("Authentication code is required")
 })
 
 function SignInForm() {
     const navigate = useNavigate()
+    const { data, mutate, isPending } = useLoginMutation()
     const { register, handleSubmit, formState: { errors, isValid } } = useForm<SignInFormData>({
-        defaultValues: { email: '', password: '' },
+        defaultValues: { username: '', password: '' },
         resolver: yupResolver(signInSchema)
     })
 
     function submitForm(values: SignInFormData) {
-        console.log(values)
+        const { username, password, twoFACode } = values
+        mutate({ username, password, twoFACode })
     }
 
     function goToSignUp() {
         navigate('/sign-up')
     }
+
+    useEffect(() => {
+        if(data?.accessToken) {
+            localStorage.setItem('accessToken', data.accessToken)
+        }
+    }, [data])
 
     return (
         <Stack
@@ -39,11 +52,11 @@ function SignInForm() {
             component="form"
         >
             <TextField
-                error={Boolean(errors.email)}
-                helperText={errors.email?.message}
-                {...register('email')}
-                id="email"
-                label="Email"
+                error={Boolean(errors.username)}
+                helperText={errors.username?.message}
+                {...register('username')}
+                id="username"
+                label="Username"
                 variant="outlined"
             />
             <TextField
@@ -55,8 +68,17 @@ function SignInForm() {
                 label="Password"
                 variant="outlined"
             />
+            <TextField
+                error={Boolean(errors.twoFACode)}
+                helperText={errors.twoFACode?.message}
+                {...register('twoFACode')}
+                id="twoFACode"
+                label="Two-Factor Authentication code"
+                variant="outlined"
+            />
             <Button disabled={!isValid} type="submit" className={classes.submitBtn} disableElevation variant="contained">Submit</Button>
             <Link className={classes.link} onClick={goToSignUp} variant="body2">Do not have account? Sign up</Link>
+            <BackdropSpinner open={isPending}/>
         </Stack>
     )
 }
