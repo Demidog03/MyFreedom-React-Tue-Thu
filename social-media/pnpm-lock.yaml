@@ -29,9 +29,12 @@ importers:
       axios:
         specifier: ^1.9.0
         version: 1.9.0
+<<<<<<< HEAD
       immer:
         specifier: ^10.1.1
         version: 10.1.1
+=======
+>>>>>>> ea099b67bc2ebb6516ffff0b5183816789c02a18
       path:
         specifier: ^0.12.7
         version: 0.12.7
