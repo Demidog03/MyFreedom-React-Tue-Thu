@@ -18,6 +18,11 @@ import ListItemText from '@mui/material/ListItemText'
 import InboxIcon from '@mui/icons-material/MoveToInbox'
 import MailIcon from '@mui/icons-material/Mail'
 import { JSX, useState } from 'react'
+import LogoutIcon from '@mui/icons-material/Logout';
+import { useAuthSelector } from '../module/auth/store/auth.store'
+import RandomBgAvatar from './RandomBgAvatar'
+import useProfileQuery from '../module/profile/query/useProfileQuery'
+import { Stack } from '@mui/material'
 
 const drawerWidth = 240
 
@@ -83,6 +88,8 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 export default function SidebarLayout({ children }: { children: JSX.Element }) {
     const theme = useTheme()
     const [open, setOpen] = useState(false)
+    const { logout } = useAuthSelector()
+    const { data: profile } = useProfileQuery()
 
     const handleDrawerOpen = () => {
         setOpen(true)
@@ -92,28 +99,37 @@ export default function SidebarLayout({ children }: { children: JSX.Element }) {
         setOpen(false)
     }
 
+    function handleLogout() {
+        logout()
+    }
+
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
             <AppBar position='fixed' open={open}>
                 <Toolbar>
-                    <IconButton
-                        color='inherit'
-                        aria-label='open drawer'
-                        onClick={handleDrawerOpen}
-                        edge='start'
-                        sx={[
-                            {
-                                mr: 2,
-                            },
-                            open && { display: 'none' },
-                        ]}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography variant='h6' noWrap component='div'>
-                        Social Media
-                    </Typography>
+                    <Stack sx={{ width: '100%' }} flexDirection="row" justifyContent="space-between" alignItems="center">
+                        <Stack flexDirection="row" alignItems="center">
+                            <IconButton
+                            color='inherit'
+                            aria-label='open drawer'
+                            onClick={handleDrawerOpen}
+                            edge='start'
+                            sx={[
+                                {
+                                    mr: 2,
+                                },
+                                open && { display: 'none' },
+                            ]}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                        <Typography variant='h6' noWrap component='div'>
+                            Social Media
+                        </Typography>
+                    </Stack>
+                    {profile && <RandomBgAvatar firstName={profile.firstName} lastName={profile.lastName} />}
+                    </Stack>
                 </Toolbar>
             </AppBar>
             <Drawer
@@ -134,8 +150,8 @@ export default function SidebarLayout({ children }: { children: JSX.Element }) {
                 </DrawerHeader>
                 <Divider />
                 <List>
-                    {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                        <ListItem key={text} disablePadding>
+                    {['Inbox'].map((text, index) => (
+                        <ListItem key={index} disablePadding>
                             <ListItemButton>
                                 <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
                                 <ListItemText primary={text} />
@@ -143,16 +159,13 @@ export default function SidebarLayout({ children }: { children: JSX.Element }) {
                         </ListItem>
                     ))}
                 </List>
-                <Divider />
-                <List>
-                    {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                        <ListItem key={text} disablePadding>
-                            <ListItemButton>
-                                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                                <ListItemText primary={text} />
-                            </ListItemButton>
-                        </ListItem>
-                    ))}
+                <List style={{ marginTop: 'auto' }}>
+                    <ListItem disablePadding>
+                        <ListItemButton onClick={handleLogout}>
+                            <ListItemIcon><LogoutIcon/></ListItemIcon>
+                            <ListItemText color='danger' primary="Logout" />
+                        </ListItemButton>
+                    </ListItem>
                 </List>
             </Drawer>
             <Main open={open}>

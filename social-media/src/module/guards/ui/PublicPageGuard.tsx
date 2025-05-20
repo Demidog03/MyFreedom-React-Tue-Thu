@@ -2,6 +2,7 @@ import { JSX, useEffect } from "react"
 import useProfileQuery from "../../profile/query/useProfileQuery"
 import { useNavigate } from "react-router"
 import { useProfileSelector } from "../../profile/store/profile.store"
+import { useAuthSelector } from "../../auth/store/auth.store"
 
 interface PublicPageGuardProps {
     children: JSX.Element
@@ -11,6 +12,7 @@ function PublicPageGuard({ children }: PublicPageGuardProps) {
     const { data, isSuccess } = useProfileQuery()
     const { setCurrentUser } = useProfileSelector()
     const navigate = useNavigate()
+    const { token } = useAuthSelector()
 
     useEffect(() => {
         if(data) {
@@ -20,12 +22,12 @@ function PublicPageGuard({ children }: PublicPageGuardProps) {
     }, [data])
 
     useEffect(() => {
-        if(isSuccess) {
+        if(isSuccess && token) {
             navigate('/')
         }
-    }, [isSuccess])
+    }, [isSuccess, token])
 
-    if(isSuccess) {
+    if(isSuccess && token) {
         return null
     }
 
