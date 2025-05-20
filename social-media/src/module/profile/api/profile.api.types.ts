@@ -11,3 +11,11 @@ export interface GetProfileResponse {
     role: Roles
     __v: number
 }
+
+export interface EditProfileBody {
+    username: string
+    firstName: string
+    lastName: string
+    age: number
+    gender: Genders
+}

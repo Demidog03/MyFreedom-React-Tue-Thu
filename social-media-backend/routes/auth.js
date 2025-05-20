@@ -139,4 +139,50 @@ router.get('/editor', authenticateToken, authorizeRole(['editor', 'admin']), (re
     res.json({ message: 'Welcome, Editor! You can contribute content here.' });
 });
 
+router.put(
+    '/profile/edit',
+    authenticateToken,
+    async function (req, res) {
+        try {
+            const {
+                username,
+                firstName,
+                lastName,
+                age,
+                gender,
+            } = req.body;
+
+            const user = await User.findById(req.user.userId);
+            if (!user) {
+                return res.status(404).json({ error: 'User not found' });
+            }
+
+            if (username && username !== user.username) user.username = username;
+            if (firstName) user.firstName = firstName;
+            if (lastName) user.lastName = lastName;
+            if (typeof age !== 'undefined') user.age = age;
+            if (gender) user.gender = gender;
+
+            await user.save();
+
+            res.json({ message: 'Profile updated successfully' });
+        } catch (error) {
+            console.error(error);
+
+            if (error.code === 11000) {
+                const duplicateField = Object.keys(error.keyValue)[0];
+                return res.status(400).json({
+                    error:
+                        duplicateField[0].toUpperCase() +
+                        duplicateField.slice(1) +
+                        ' already exists.',
+                });
+            }
+
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+);
+
+
 module.exports = router;

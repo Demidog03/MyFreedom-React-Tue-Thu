@@ -1,18 +1,20 @@
 import { JSX, useEffect } from "react"
 import useProfileQuery from "../../profile/query/useProfileQuery"
-import { useNavigate } from "react-router"
+import { useLocation, useNavigate } from "react-router"
 import { useProfileSelector } from "../../profile/store/profile.store"
 import { useAuthSelector } from "../../auth/store/auth.store"
+import BackdropSpinner from "../../../shared/BackdropSpinner"
 
 interface AuthPageGuardProps {
     children: JSX.Element
 }
 
 function AuthPageGuard({ children }: AuthPageGuardProps) {
-    const { isSuccess, data } = useProfileQuery()
+    const { isSuccess, data, isLoading } = useProfileQuery()
     const { setCurrentUser } = useProfileSelector()
     const { token } = useAuthSelector()
     const navigate = useNavigate()
+    const location = useLocation()
 
     useEffect(() => {
         if(data) {
@@ -22,10 +24,14 @@ function AuthPageGuard({ children }: AuthPageGuardProps) {
     }, [data])
 
     useEffect(() => {
-        if(!isSuccess || !token) {
-            navigate('/sign-in')
+        if(!isLoading && !isSuccess || !token) {
+            navigate('/sign-in', { state: { from: location.pathname } })
         }
-    }, [isSuccess, token])
+    }, [isSuccess, token, isLoading])
+
+    if (isLoading) {
+        return <BackdropSpinner open={true}/>
+    }
 
     if(!isSuccess || !token) {
         return null

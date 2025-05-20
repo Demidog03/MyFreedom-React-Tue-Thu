@@ -23,6 +23,7 @@ import { useAuthSelector } from '../module/auth/store/auth.store'
 import RandomBgAvatar from './RandomBgAvatar'
 import useProfileQuery from '../module/profile/query/useProfileQuery'
 import { Stack } from '@mui/material'
+import { useNavigate } from 'react-router'
 
 const drawerWidth = 240
 
@@ -90,6 +91,7 @@ export default function SidebarLayout({ children }: { children: JSX.Element }) {
     const [open, setOpen] = useState(false)
     const { logout } = useAuthSelector()
     const { data: profile } = useProfileQuery()
+    const navigate = useNavigate()
 
     const handleDrawerOpen = () => {
         setOpen(true)
@@ -101,6 +103,14 @@ export default function SidebarLayout({ children }: { children: JSX.Element }) {
 
     function handleLogout() {
         logout()
+    }
+
+    function goToEditProfile() {
+        navigate('/profile')
+    }
+
+    function goToMain() {
+        navigate('/')
     }
 
     return (
@@ -119,16 +129,20 @@ export default function SidebarLayout({ children }: { children: JSX.Element }) {
                                 {
                                     mr: 2,
                                 },
-                                open && { display: 'none' },
+                                open && {   display: 'none' },
                             ]}
                         >
                             <MenuIcon />
                         </IconButton>
-                        <Typography variant='h6' noWrap component='div'>
+                        <Typography style={{ cursor: 'pointer' }} onClick={goToMain} variant='h6' noWrap>
                             Social Media
                         </Typography>
                     </Stack>
-                    {profile && <RandomBgAvatar firstName={profile.firstName} lastName={profile.lastName} />}
+                    {profile && (
+                        <div style={{ cursor: 'pointer' }} onClick={goToEditProfile}>
+                            <RandomBgAvatar firstName={profile.firstName} lastName={profile.lastName} />
+                        </div>
+                    )}
                     </Stack>
                 </Toolbar>
             </AppBar>
